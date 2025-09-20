@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
-import NotFound from "pages/NotFound";
+import NotFound from "./pages/notfound";
 import HelperDiscoveryMap from './pages/helper-discovery-map';
 import CommunityVerification from './pages/commity-verification';
 import TaskPostingDashboard from './pages/task-posting-dashboard';
