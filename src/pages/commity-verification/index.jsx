@@ -1,3 +1,4 @@
+// ...existing code...
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/ui/Header';
 import VerificationCard from './components/VerificationCard';

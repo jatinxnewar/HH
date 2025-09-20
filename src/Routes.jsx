@@ -4,7 +4,7 @@ import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
 import NotFound from "pages/NotFound";
 import HelperDiscoveryMap from './pages/helper-discovery-map';
-import CommunityVerification from './pages/community-verification';
+import CommunityVerification from './pages/commity-verification';
 import TaskPostingDashboard from './pages/task-posting-dashboard';
 import HelperProfileDetails from './pages/helper-profile-details';
 import TaskManagementHub from './pages/task-management-hub';
