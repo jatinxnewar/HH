@@ -1,3 +1,4 @@
+import Navbar from "./components/Navbar";
 import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
@@ -13,6 +14,7 @@ import EmergencySOSCenter from './pages/emergency-sos-center';
 const Routes = () => {
   return (
     <BrowserRouter>
+      <Navbar />
       <ErrorBoundary>
       <ScrollToTop />
       <RouterRoutes>
