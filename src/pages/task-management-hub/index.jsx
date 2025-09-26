@@ -1,17 +1,22 @@
 // ...existing code...
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../../components/ui/Header';
 import TaskCard from './components/TaskCard';
 import FilterPanel from './components/FilterPanel';
 import TaskAnalytics from './components/TaskAnalytics';
 import EmergencyTaskSection from './components/EmergencyTaskSection';
 import GamificationPanel from './components/GamificationPanel';
+import BiddingManagement from './components/BiddingManagement';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
+import { biddingService } from '../../services/biddingService';
+import { smartContractService } from '../../services/smartContract';
+import { reputationService } from '../../services/blockchainReputation';
 
 const TaskManagementHub = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [filters, setFilters] = useState({
     status: 'all',
     urgency: 'all',
@@ -20,6 +25,13 @@ const TaskManagementHub = () => {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // grid or list
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [blockchainData, setBlockchainData] = useState({
+    escrowContracts: [],
+    reputationScores: {},
+    activeDisputes: []
+  });
 
   // Mock data for tasks
   const mockTasks = [

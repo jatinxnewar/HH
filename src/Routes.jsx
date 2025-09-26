@@ -4,6 +4,7 @@ import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
 import NotFound from "./pages/NotFound";
+import HomePage from './pages/HomePage';
 import HelperDiscoveryMap from './pages/helper-discovery-map';
 import CommunityVerification from './pages/commity-verification';
 import TaskPostingDashboard from './pages/task-posting-dashboard';
@@ -19,9 +20,9 @@ const Routes = () => {
       <ScrollToTop />
       <RouterRoutes>
         {/* Define your route here */}
-        <Route path="/" element={<CommunityVerification />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/helper-discovery-map" element={<HelperDiscoveryMap />} />
-        <Route path="/community-verification" element={<CommunityVerification />} />
+        <Route path="/commity-verification" element={<CommunityVerification />} />
         <Route path="/task-posting-dashboard" element={<TaskPostingDashboard />} />
         <Route path="/helper-profile-details" element={<HelperProfileDetails />} />
         <Route path="/task-management-hub" element={<TaskManagementHub />} />
