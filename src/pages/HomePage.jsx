@@ -56,10 +56,17 @@ const HomePage = () => {
     },
     {
       title: 'Find Helpers',
-      description: 'Browse available helpers nearby',
-      icon: 'Users',
+      description: 'Search and book helpers instantly',
+      icon: 'Search',
       color: 'green',
-      action: () => navigate('/helper-discovery-map')
+      action: () => navigate('/helper-search')
+    },
+    {
+      title: 'Instant Services',
+      description: 'Get help within 30 minutes',
+      icon: 'Zap',
+      color: 'orange',
+      action: () => navigate('/helper-search?instant=true')
     },
     {
       title: 'Emergency SOS',
@@ -159,7 +166,7 @@ const HomePage = () => {
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-foreground mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {quickActions.map((action, index) => (
               <button
                 key={index}
@@ -170,6 +177,7 @@ const HomePage = () => {
                   action.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30' :
                   action.color === 'green' ? 'bg-green-100 dark:bg-green-900/30' :
                   action.color === 'red' ? 'bg-red-100 dark:bg-red-900/30' :
+                  action.color === 'orange' ? 'bg-orange-100 dark:bg-orange-900/30' :
                   'bg-purple-100 dark:bg-purple-900/30'
                 }`}>
                   <Icon name={action.icon} size={24} color={

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 import Icon from './AppIcon';
 import HelpHiveLogo from './HelpHiveLogo';
 
@@ -8,6 +9,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [notifications, setNotifications] = useState(3);
@@ -43,9 +45,9 @@ const Navbar = () => {
     },
     {
       name: 'Find Helpers',
-      href: '/helper-discovery-map',
-      icon: 'Users',
-      active: location.pathname === '/helper-discovery-map'
+      href: '/helper-search',
+      icon: 'Search',
+      active: location.pathname === '/helper-search'
     },
     {
       name: 'Profile',
@@ -105,25 +107,6 @@ const Navbar = () => {
 
             {/* Right side actions */}
             <div className="flex items-center space-x-3">
-              {/* Quick Actions */}
-              <div className="hidden md:flex items-center space-x-2">
-                {quickActions.map((action) => (
-                  <button
-                    key={action.name}
-                    onClick={action.action}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      action.variant === 'danger'
-                        ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
-                    title={action.name}
-                  >
-                    <Icon name={action.icon} size={14} />
-                    <span className="hidden lg:inline">{action.name}</span>
-                  </button>
-                ))}
-              </div>
-
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
@@ -133,21 +116,42 @@ const Navbar = () => {
                 <Icon name={isDarkMode ? "Sun" : "Moon"} size={20} />
               </button>
 
-              {/* Notifications */}
-              <button
-                className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
-                onClick={() => navigate('/notifications')}
-              >
-                <Icon name="Bell" size={20} />
-                {notifications > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
-                    {notifications}
-                  </span>
-                )}
-              </button>
+              {isAuthenticated ? (
+                <>
+                  {/* Quick Actions for authenticated users */}
+                  <div className="hidden md:flex items-center space-x-2">
+                    {quickActions.map((action) => (
+                      <button
+                        key={action.name}
+                        onClick={action.action}
+                        className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                          action.variant === 'danger'
+                            ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
+                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                        }`}
+                        title={action.name}
+                      >
+                        <Icon name={action.icon} size={14} />
+                        <span className="hidden lg:inline">{action.name}</span>
+                      </button>
+                    ))}
+                  </div>
 
-              {/* User Menu */}
-              <div className="relative">
+                  {/* Notifications */}
+                  <button
+                    className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
+                    onClick={() => navigate('/notifications')}
+                  >
+                    <Icon name="Bell" size={20} />
+                    {notifications > 0 && (
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+                        {notifications}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* User Menu */}
+                  <div className="relative">
                 <button
                   className="flex items-center space-x-2 p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -160,68 +164,81 @@ const Navbar = () => {
 
                 {/* User Dropdown */}
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-600 py-2 animate-fadeIn">
-                    <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-600">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">John Doe</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{userRole}</p>
-                    </div>
-                    <Link
-                      to="/helper-profile-details"
-                      className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center">
-                        <Icon name="User" size={12} color="#3B82F6" />
+                      <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-600 py-2 animate-fadeIn">
+                      <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-600">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name || 'User'}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
                       </div>
-                      <span>Profile</span>
-                    </Link>
-                    <Link
-                      to="/settings"
-                      className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center">
-                        <Icon name="Settings" size={12} color="#6B7280" />
-                      </div>
-                      <span>Settings</span>
-                    </Link>
-                    <button
-                      className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 w-full text-left rounded-md transition-colors"
-                      onClick={() => {
-                        setUserRole(userRole === 'seeker' ? 'helper' : 'seeker');
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-                        <Icon name="RefreshCw" size={12} color="#10B981" />
-                      </div>
-                      <span>Switch to {userRole === 'seeker' ? 'Helper' : 'Seeker'}</span>
-                    </button>
-                    <div className="border-t border-gray-100 mt-2 pt-2">
-                      <button
-                        className="flex items-center space-x-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 w-full text-left rounded-md transition-colors"
-                        onClick={() => {
-                          // Handle logout
-                          setIsMenuOpen(false);
-                        }}
+                      <Link
+                        to="/helper-profile-details"
+                        className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
                       >
-                        <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center">
-                          <Icon name="LogOut" size={12} color="#EF4444" />
+                        <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Icon name="User" size={12} color="#3B82F6" />
                         </div>
-                        <span>Sign Out</span>
-                      </button>
+                        <span>Profile</span>
+                      </Link>
+                      <Link
+                        to="/task-management-hub"
+                        className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-md transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+                          <Icon name="CheckSquare" size={12} color="#10B981" />
+                        </div>
+                        <span>My Bookings</span>
+                      </Link>
+                      <div className="border-t border-gray-100 dark:border-slate-600 mt-2 pt-2">
+                        <button
+                          className="flex items-center space-x-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 w-full text-left rounded-md transition-colors"
+                          onClick={() => {
+                            logout();
+                            setIsMenuOpen(false);
+                            navigate('/');
+                          }}
+                        >
+                          <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center">
+                            <Icon name="LogOut" size={12} color="#EF4444" />
+                          </div>
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
                 )}
               </div>
 
-              {/* Mobile menu button */}
-              <button
-                className="md:hidden p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <Icon name={isMenuOpen ? "X" : "Menu"} size={20} />
-              </button>
+                  {/* Mobile menu button */}
+                  <button
+                    className="md:hidden p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  >
+                    <Icon name={isMenuOpen ? "X" : "Menu"} size={20} />
+                  </button>
+                </>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Link
+                    to="/login"
+                    className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    Get Started
+                  </Link>
+                  {/* Mobile menu button for non-authenticated */}
+                  <button
+                    className="md:hidden p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  >
+                    <Icon name={isMenuOpen ? "X" : "Menu"} size={20} />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
