@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Icon from '../components/AppIcon';
 import Button from '../components/ui/Button';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [stats, setStats] = useState({
     activeTasks: 12,
     completedTasks: 156,
@@ -102,6 +104,132 @@ const HomePage = () => {
     }
   };
 
+  // Landing page for non-authenticated users
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Hero Section */}
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+              Welcome to{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                HelpHive
+              </span>
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+              Connect with trusted local helpers for all your daily needs. From house cleaning to tutoring, 
+              find verified professionals in your area instantly.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                onClick={() => navigate('/signup')}
+                className="px-8 py-4 text-lg"
+              >
+                Get Started Free
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => navigate('/login')}
+                className="px-8 py-4 text-lg"
+              >
+                Sign In
+              </Button>
+            </div>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Search" size={32} color="#3B82F6" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Find Helpers</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Browse verified professionals in your area with ratings and reviews
+              </p>
+            </div>
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Zap" size={32} color="#10B981" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Instant Booking</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Book helpers instantly or schedule for later with flexible pricing
+              </p>
+            </div>
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Shield" size={32} color="#8B5CF6" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Secure & Protected</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                All payments are protected and helpers are background verified
+              </p>
+            </div>
+          </div>
+
+          {/* Service Categories */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
+              Popular Services
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+              {[
+                { name: 'House Cleaning', icon: 'Home', color: 'blue' },
+                { name: 'Plumbing', icon: 'Wrench', color: 'green' },
+                { name: 'Tutoring', icon: 'BookOpen', color: 'purple' },
+                { name: 'Gardening', icon: 'Flower', color: 'emerald' },
+                { name: 'Cooking', icon: 'ChefHat', color: 'orange' },
+                { name: 'Car Repair', icon: 'Car', color: 'red' }
+              ].map((service, index) => (
+                <div key={index} className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700 text-center">
+                  <Icon name={service.icon} size={32} className="mx-auto mb-3 text-gray-600 dark:text-gray-300" />
+                  <h4 className="font-medium text-gray-900 dark:text-white">{service.name}</h4>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-gray-200 dark:border-slate-700 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              <div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>
+                <div className="text-gray-600 dark:text-gray-300">Active Helpers</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-green-600 mb-2">50,000+</div>
+                <div className="text-gray-600 dark:text-gray-300">Tasks Completed</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">4.9★</div>
+                <div className="text-gray-600 dark:text-gray-300">Average Rating</div>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Ready to get started?
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+              Join thousands of users who trust HelpHive for their daily needs
+            </p>
+            <Button 
+              onClick={() => navigate('/signup')}
+              className="px-8 py-4 text-lg"
+            >
+              Sign Up Now - It's Free!
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Authenticated user dashboard
   return (
     <div className="min-h-screen bg-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -109,7 +237,7 @@ const HomePage = () => {
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-8 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome back, John! 👋</h1>
+              <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name || 'User'}! 👋</h1>
               <p className="text-blue-100 text-lg">Ready to get things done today?</p>
             </div>
             <div className="hidden md:block">

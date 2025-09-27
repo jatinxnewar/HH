@@ -87,23 +87,25 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    item.active
-                      ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 shadow-sm'
-                      : item.primary
-                      ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700'
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
+            {isAuthenticated && (
+              <div className="hidden md:flex items-center space-x-1">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      item.active
+                        ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 shadow-sm'
+                        : item.primary
+                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+                        : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            )}
 
             {/* Right side actions */}
             <div className="flex items-center space-x-3">
@@ -247,38 +249,57 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 animate-slideIn">
             <div className="px-4 py-4 space-y-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    item.active
-                      ? 'bg-blue-50 text-blue-600'
-                      : item.primary
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {isAuthenticated ? (
+                navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      item.active
+                        ? 'bg-blue-50 text-blue-600'
+                        : item.primary
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="block px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all duration-200"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="block px-4 py-3 rounded-lg text-sm font-medium bg-blue-600 text-white transition-all duration-200"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
               
               {/* Mobile Quick Actions */}
-              <div className="pt-4 mt-4 border-t border-gray-200 space-y-2">
+              <div className="pt-4 mt-4 border-t border-gray-200 dark:border-slate-600 space-y-2">
                 {/* Theme Toggle for Mobile */}
                 <button
                   onClick={() => {
                     toggleTheme();
                     setIsMenuOpen(false);
                   }}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 w-full bg-gray-50 text-gray-600"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 w-full bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
                 >
                   <Icon name={isDarkMode ? "Sun" : "Moon"} size={18} />
                   <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
                 </button>
                 
-                {quickActions.map((action) => (
+                {isAuthenticated && quickActions.map((action) => (
                   <button
                     key={action.name}
                     onClick={() => {
@@ -287,8 +308,8 @@ const Navbar = () => {
                     }}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 w-full ${
                       action.variant === 'danger'
-                        ? 'bg-red-50 text-red-600'
-                        : 'bg-gray-50 text-gray-600'
+                        ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+                        : 'bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300'
                     }`}
                   >
                     <Icon name={action.icon} size={18} />
